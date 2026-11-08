@@ -1,0 +1,3843 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="catppuccin">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Java Practice — тесты по теории</title>
+
+    <!-- Inter + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================================
+           TOKENS
+           ============================================================ */
+        :root {
+            --radius-lg: 18px;
+            --radius-md: 14px;
+            --radius-sm: 9px;
+
+            --fs-ui: 14px;
+            --fs-base: 15px;
+
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-code: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
+        }
+
+        /* ============================================================
+           THEMES
+           ============================================================ */
+
+        :root[data-theme="gruvbox"] {
+            --bg:#282828; --bg2:#1D2021;
+            --panel:#32302F; --panel2:#3C3836;
+            --border:#504945;
+            --text:#EBDBB2; --text-strong:#FBF1C7; --muted:#A89984;
+            --accent:#83A598; --accent-soft:rgba(131,165,152,.16);
+            --green:#B8BB26; --yellow:#FABD2F; --red:#FB4934;
+            --glow1:rgba(131,165,152,.10); --glow2:rgba(250,189,47,.05);
+            --opt-bg:rgba(29,32,33,.72);
+            --code-bg:#1D2021;
+            --shadow:0 8px 30px -10px rgba(0,0,0,.8);
+        }
+
+        /* ---- Everforest Dark Medium ---- */
+        :root[data-theme="everforest"] {
+            --bg: #2D353B;
+            --panel: #343F44;
+            --panel-alt: #3D484D;
+            --panel-hover: #475258;
+
+            --border: #475258;
+            --border-hover: #A7C080;
+
+            --text: #D3C6AA;
+            --text-strong: #E4DCC2;
+            --muted: #859289;
+
+            --accent: #A7C080;
+            --accent-soft: rgba(167, 192, 128, .16);
+
+            --green: #A7C080;
+            --yellow: #DBBC7F;
+            --red: #E67E80;
+
+            --glow1: rgba(167, 192, 128, .10);
+            --glow2: rgba(219, 188, 127, .05);
+
+            --hl-comment: #859289;
+            --hl-string: #A7C080;
+            --hl-char: #E69875;
+            --hl-preproc: #83C092;
+
+            --hl-keyword: #E67E80;
+            --hl-type: #D3C6AA;
+            --hl-number: #D699B6;
+            --hl-func: #A7C080;
+
+            --code-block-bg: #272E33;
+            --table-header: #3D484D;
+
+            --shadow: 0 4px 20px -8px rgba(0, 0, 0, .8);
+            --shadow-hover: 0 8px 30px -8px rgba(0, 0, 0, .95);
+
+            --yellow-dim: #8C7851;
+            --reveal-hover: rgba(219, 188, 127, .08);
+
+            --green-dim: #52684A;
+            --done-hover: rgba(167, 192, 128, .08);
+        }
+
+        :root[data-theme="catppuccin"] {
+            --bg:#1e1e2e; --bg2:#11111b;
+            --panel:#181825; --panel2:#313244;
+            --border:#45475a;
+            --text:#bac2de; --text-strong:#cdd6f4; --muted:#a6adc8;
+            --accent:#89b4fa; --accent-soft:rgba(137,180,250,.15);
+            --green:#a6e3a1; --yellow:#f9e2af; --red:#f38ba8;
+            --glow1:rgba(137,180,250,.08); --glow2:rgba(166,227,161,.05);
+            --opt-bg:rgba(17,17,27,.72);
+            --code-bg:#11111b;
+            --shadow:0 8px 28px -10px rgba(0,0,0,.75);
+        }
+
+        :root[data-theme="kanagawa"] {
+            --bg:#1F1F28; --bg2:#16161D;
+            --panel:#2A2A37; --panel2:#363646;
+            --border:#54546D;
+            --text:#DCD7BA; --text-strong:#F2E9DE; --muted:#957FB8;
+            --accent:#7FB4CA; --accent-soft:rgba(127,180,202,.15);
+            --green:#98BB6C; --yellow:#E6C384; --red:#E82424;
+            --glow1:rgba(126,156,216,.07); --glow2:rgba(152,187,108,.05);
+            --opt-bg:rgba(22,22,29,.72);
+            --code-bg:#16161D;
+            --shadow:0 8px 28px -10px rgba(0,0,0,.68);
+        }
+
+        :root[data-theme="nord"] {
+            --bg:#2E3440; --bg2:#292E39;
+            --panel:#3B4252; --panel2:#434C5E;
+            --border:#4C566A;
+            --text:#E5E9F0; --text-strong:#ECEFF4; --muted:#8FA1B3;
+            --accent:#88C0D0; --accent-soft:rgba(136,192,208,.15);
+            --green:#A3BE8C; --yellow:#EBCB8B; --red:#BF616A;
+            --glow1:rgba(94,129,172,.15); --glow2:rgba(163,190,140,.08);
+            --opt-bg:rgba(41,46,57,.72);
+            --code-bg:#292E39;
+            --shadow:0 8px 28px -10px rgba(0,0,0,.6);
+        }
+
+        :root[data-theme="dracula"] {
+            --bg:#282A36; --bg2:#21222C;
+            --panel:#343746; --panel2:#44475A;
+            --border:#50536B;
+            --text:#F8F8F2; --text-strong:#FFFFFF; --muted:#A9B1C6;
+            --accent:#BD93F9; --accent-soft:rgba(189,147,249,.15);
+            --green:#50FA7B; --yellow:#F1FA8C; --red:#FF5555;
+            --glow1:rgba(189,147,249,.10); --glow2:rgba(80,250,123,.06);
+            --opt-bg:rgba(33,34,44,.72);
+            --code-bg:#21222C;
+            --shadow:0 8px 28px -10px rgba(0,0,0,.72);
+        }
+
+        :root[data-theme="dark"] {
+            --bg:#0D1117; --bg2:#010409;
+            --panel:#161B22; --panel2:#1C222C;
+            --border:#30363D;
+            --text:#C9D1D9; --text-strong:#F0F6FC; --muted:#8B949E;
+            --accent:#58A6FF; --accent-soft:rgba(88,166,255,.15);
+            --green:#56D364; --yellow:#E3B341; --red:#F85149;
+            --glow1:rgba(88,166,255,.08); --glow2:rgba(86,211,100,.05);
+            --opt-bg:rgba(1,4,9,.72);
+            --code-bg:#010409;
+            --shadow:0 8px 30px -10px rgba(0,0,0,.85);
+        }
+
+        :root[data-theme="light"] {
+            --bg:#FFFFFF; --bg2:#F6F8FA;
+            --panel:#F6F8FA; --panel2:#EAEEF2;
+            --border:#D0D7DE;
+            --text:#1F2328; --text-strong:#0E1116; --muted:#59636E;
+            --accent:#0969DA; --accent-soft:rgba(9,105,218,.12);
+            --green:#1A7F37; --yellow:#9A6700; --red:#CF222E;
+            --glow1:rgba(9,105,218,.05); --glow2:rgba(26,127,55,.04);
+            --opt-bg:rgba(246,248,250,.9);
+            --code-bg:#F6F8FA;
+            --shadow:0 6px 24px -8px rgba(0,0,0,.13);
+        }
+
+
+        /* ============================================================
+           BASE
+           ============================================================ */
+
+        * {
+            box-sizing:border-box;
+            margin:0;
+            padding:0;
+        }
+
+        html {
+            scroll-behavior:smooth;
+        }
+
+        body {
+            min-height:100vh;
+            color:var(--text);
+
+            background:
+                    radial-gradient(
+                            ellipse at 10% 0%,
+                            var(--glow1),
+                            transparent 45%
+                    ),
+                    radial-gradient(
+                            ellipse at 100% 12%,
+                            var(--glow2),
+                            transparent 42%
+                    ),
+                    var(--bg);
+
+            font-family:var(--font-main);
+            font-size:var(--fs-ui);
+            line-height:1.55;
+
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            text-rendering:optimizeLegibility;
+
+            transition:
+                    background .3s ease,
+                    color .3s ease;
+        }
+
+        button,
+        input,
+        select {
+            font:inherit;
+        }
+
+        button {
+            cursor:pointer;
+            border:1px solid var(--border);
+            border-radius:var(--radius-sm);
+            background:var(--panel);
+            color:var(--text);
+            transition:
+                    background .16s,
+                    border-color .16s,
+                    color .16s,
+                    transform .16s,
+                    filter .16s;
+        }
+
+        button:hover:not(:disabled) {
+            background:var(--panel2);
+            border-color:var(--accent);
+            transform:translateY(-1px);
+        }
+
+        button:active:not(:disabled) {
+            transform:scale(.98);
+        }
+
+        button:disabled {
+            cursor:default;
+            opacity:.55;
+        }
+
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline:2px solid var(--accent);
+            outline-offset:2px;
+        }
+
+        code {
+            font-family:var(--font-code);
+            background:var(--code-bg);
+            padding:2px 6px;
+            border-radius:5px;
+            font-size:.9em;
+            color:var(--accent);
+        }
+
+        ::-webkit-scrollbar {
+            width:8px;
+            height:8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background:transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background:var(--border);
+            border-radius:4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background:var(--muted);
+        }
+
+
+        /* ============================================================
+           WRAP
+           ============================================================ */
+
+        .wrap {
+            width:min(980px,100%);
+            margin:0 auto;
+            padding:36px 20px 80px;
+        }
+
+
+        /* ============================================================
+           SETTINGS
+           ============================================================ */
+
+        .settings {
+            position:fixed;
+            top:18px;
+            right:18px;
+            z-index:50;
+
+            display:flex;
+            align-items:center;
+            gap:9px;
+
+            padding:8px 10px;
+
+            border:1px solid var(--border);
+            border-radius:14px;
+
+            background:color-mix(
+                    in srgb,
+                    var(--panel) 92%,
+                    transparent
+            );
+
+            backdrop-filter:blur(14px);
+            box-shadow:var(--shadow);
+        }
+
+        .theme-select {
+            min-width:145px;
+            padding:7px 28px 7px 9px;
+
+            border:1px solid var(--border);
+            border-radius:8px;
+
+            background:var(--panel2);
+            color:var(--text);
+
+            font-size:12px;
+            cursor:pointer;
+            outline:none;
+        }
+
+        .theme-select:hover {
+            border-color:var(--accent);
+        }
+
+        .font-control {
+            display:flex;
+            align-items:center;
+            gap:8px;
+
+            color:var(--muted);
+            font-size:11px;
+            white-space:nowrap;
+        }
+
+        .font-slider {
+            width:85px;
+            height:4px;
+
+            -webkit-appearance:none;
+            appearance:none;
+
+            background:var(--border);
+            border-radius:2px;
+            outline:none;
+        }
+
+        .font-slider::-webkit-slider-thumb {
+            width:13px;
+            height:13px;
+
+            -webkit-appearance:none;
+            appearance:none;
+
+            border:none;
+            border-radius:50%;
+
+            background:var(--accent);
+            cursor:pointer;
+        }
+
+        .font-slider::-moz-range-thumb {
+            width:13px;
+            height:13px;
+
+            border:none;
+            border-radius:50%;
+
+            background:var(--accent);
+            cursor:pointer;
+        }
+
+
+        /* ============================================================
+           HERO
+           ============================================================ */
+
+        .hero {
+            text-align:center;
+            margin-bottom:38px;
+            padding-top:24px;
+        }
+
+        .eyebrow {
+            color:var(--accent);
+            text-transform:uppercase;
+            letter-spacing:.18em;
+            font-size:11px;
+            font-weight:800;
+            margin-bottom:10px;
+        }
+
+        .hero h1 {
+            color:var(--text-strong);
+            font-size:clamp(28px,5vw,44px);
+            letter-spacing:-.04em;
+            line-height:1.1;
+        }
+
+        .hero p {
+            color:var(--muted);
+            margin-top:13px;
+            max-width:600px;
+            margin-inline:auto;
+            font-size:var(--fs-base);
+        }
+
+
+        /* ============================================================
+           TOPIC GRID
+           ============================================================ */
+
+        .grid {
+            display:grid;
+            grid-template-columns:
+                repeat(auto-fill,minmax(210px,1fr));
+            gap:14px;
+        }
+
+        .topic {
+            width:100%;
+            padding:20px;
+
+            border-radius:18px;
+            background:var(--panel);
+
+            text-align:left;
+            box-shadow:var(--shadow);
+
+            position:relative;
+        }
+
+        .topic:hover {
+            border-color:var(--accent);
+            transform:translateY(-3px);
+        }
+
+        .t-icon {
+            font-size:26px;
+            display:block;
+            margin-bottom:10px;
+        }
+
+        .t-name {
+            color:var(--text-strong);
+            font-size:16px;
+            font-weight:700;
+            letter-spacing:-.02em;
+            margin-bottom:4px;
+        }
+
+        .t-count {
+            color:var(--muted);
+            font-size:12.5px;
+        }
+
+        .t-note {
+            margin-top:9px;
+            padding:4px 8px;
+
+            border-radius:7px;
+
+            font-size:10.5px;
+
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--yellow) 14%,
+                            transparent
+                    );
+
+            color:var(--yellow);
+
+            display:inline-block;
+        }
+
+        .topic.special {
+            border-color:
+                    color-mix(
+                            in srgb,
+                            var(--yellow) 40%,
+                            var(--border)
+                    );
+        }
+
+
+        /* ============================================================
+           RANDOM PANEL
+           ============================================================ */
+
+        .rnd {
+            margin-top:26px;
+            padding:22px;
+
+            border:1px solid var(--border);
+            border-radius:18px;
+
+            background:var(--panel);
+            box-shadow:var(--shadow);
+        }
+
+        .rnd h2 {
+            color:var(--text-strong);
+            font-size:17px;
+            margin-bottom:5px;
+        }
+
+        .rnd .sub {
+            color:var(--muted);
+            font-size:13px;
+            margin-bottom:16px;
+        }
+
+        .rnd-row {
+            display:flex;
+            flex-wrap:wrap;
+            gap:13px;
+            align-items:center;
+        }
+
+        .cnt {
+            display:flex;
+            align-items:center;
+            gap:9px;
+        }
+
+        .cnt span {
+            color:var(--muted);
+            font-size:14px;
+        }
+
+        .cnt input {
+            width:76px;
+            padding:9px;
+
+            border:1px solid var(--border);
+            border-radius:10px;
+
+            background:var(--bg2);
+            color:var(--text);
+
+            text-align:center;
+            outline:none;
+        }
+
+        .chk {
+            display:flex;
+            align-items:center;
+            gap:8px;
+
+            color:var(--muted);
+            cursor:pointer;
+
+            font-size:13px;
+        }
+
+        .chk input {
+            width:17px;
+            height:17px;
+
+            accent-color:var(--accent);
+            cursor:pointer;
+        }
+
+        .primary {
+            background:var(--accent);
+            color:var(--bg);
+            border-color:var(--accent);
+
+            font-weight:700;
+            padding:11px 20px;
+        }
+
+        .primary:hover:not(:disabled) {
+            filter:brightness(1.1);
+        }
+
+
+        /* ============================================================
+           QUIZ HEADER
+           ============================================================ */
+
+        .qhead {
+            position:sticky;
+            top:0;
+            z-index:30;
+
+            padding:14px 0 12px;
+            margin-bottom:20px;
+
+            background:
+                    linear-gradient(
+                            to bottom,
+                            var(--bg) 70%,
+                            transparent
+                    );
+
+            backdrop-filter:blur(6px);
+        }
+
+        .qbar {
+            display:flex;
+            align-items:center;
+            gap:11px;
+            flex-wrap:wrap;
+            margin-bottom:11px;
+        }
+
+        .qbar .back {
+            padding:7px 13px;
+            font-size:13px;
+        }
+
+        .qbar .title {
+            color:var(--text-strong);
+            font-weight:700;
+            font-size:15.5px;
+            margin-right:auto;
+        }
+
+        .pill {
+            padding:5px 11px;
+            border-radius:20px;
+            font-size:12.5px;
+            font-weight:700;
+        }
+
+        .pill.ok {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--green) 15%,
+                            transparent
+                    );
+            color:var(--green);
+        }
+
+        .pill.bad {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--red) 15%,
+                            transparent
+                    );
+            color:var(--red);
+        }
+
+        .prog {
+            height:5px;
+            background:var(--panel2);
+            border-radius:4px;
+            overflow:hidden;
+        }
+
+        .prog-fill {
+            height:100%;
+
+            background:
+                    linear-gradient(
+                            90deg,
+                            var(--accent),
+                            var(--green)
+                    );
+
+            border-radius:4px;
+
+            transition:
+                    width .4s cubic-bezier(.4,0,.2,1);
+        }
+
+
+        /* ============================================================
+           QUESTION CARDS
+           ============================================================ */
+
+        .stack {
+            display:flex;
+            flex-direction:column;
+            gap:18px;
+        }
+
+        .card {
+            padding:24px;
+
+            border:1px solid var(--border);
+            border-radius:18px;
+
+            background:var(--panel);
+            box-shadow:var(--shadow);
+
+            animation:
+                    slideIn .45s cubic-bezier(.2,.8,.3,1);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity:0;
+                transform:translateY(22px);
+            }
+
+            to {
+                opacity:1;
+                transform:none;
+            }
+        }
+
+        .card.done {
+            opacity:.92;
+        }
+
+        .card.done:hover {
+            opacity:1;
+        }
+
+        .q-top {
+            display:flex;
+            align-items:center;
+            gap:8px;
+            flex-wrap:wrap;
+            margin-bottom:9px;
+        }
+
+        .q-num {
+            color:var(--accent);
+            font-size:11px;
+            font-weight:800;
+            letter-spacing:.1em;
+            text-transform:uppercase;
+        }
+
+        .tag {
+            padding:3px 9px;
+            border-radius:7px;
+            font-size:10.5px;
+            font-weight:600;
+        }
+
+        .tag.multi {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--accent) 14%,
+                            transparent
+                    );
+            color:var(--accent);
+        }
+
+        .tag.src {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--yellow) 14%,
+                            transparent
+                    );
+            color:var(--yellow);
+        }
+
+        .tag.topic {
+            background:var(--panel2);
+            color:var(--muted);
+        }
+
+        .q-text {
+            color:var(--text-strong);
+            font-size:calc(var(--fs-base) + 3px);
+            font-weight:650;
+            letter-spacing:-.02em;
+            line-height:1.38;
+            margin-bottom:16px;
+        }
+
+        .opts {
+            display:flex;
+            flex-direction:column;
+            gap:9px;
+        }
+
+        .opt {
+            display:flex;
+            align-items:flex-start;
+            gap:12px;
+
+            padding:14px 16px;
+            text-align:left;
+
+            border-radius:13px;
+
+            background:var(--opt-bg);
+            width:100%;
+        }
+
+        .opt:hover:not(:disabled) {
+            border-color:var(--accent);
+        }
+
+        .opt:disabled {
+            transform:none;
+        }
+
+        .okey {
+            flex-shrink:0;
+
+            width:25px;
+            height:25px;
+
+            border-radius:8px;
+
+            background:var(--panel2);
+
+            display:grid;
+            place-items:center;
+
+            font-family:var(--font-code);
+            font-size:11.5px;
+            font-weight:800;
+
+            color:var(--muted);
+        }
+
+        .otext {
+            flex:1;
+            font-size:var(--fs-base);
+        }
+
+        .omark {
+            flex-shrink:0;
+            font-size:17px;
+            font-weight:800;
+            opacity:0;
+            transition:.2s;
+        }
+
+        .opt.sel {
+            border-color:var(--accent);
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--accent) 9%,
+                            transparent
+                    );
+        }
+
+        .opt.sel .okey {
+            background:var(--accent);
+            color:var(--bg);
+        }
+
+        .opt.right {
+            border-color:var(--green);
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--green) 10%,
+                            transparent
+                    );
+        }
+
+        .opt.right .okey {
+            background:var(--green);
+            color:var(--bg);
+        }
+
+        .opt.right .omark {
+            opacity:1;
+            color:var(--green);
+        }
+
+        .opt.bad {
+            border-color:var(--red);
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--red) 10%,
+                            transparent
+                    );
+        }
+
+        .opt.bad .okey {
+            background:var(--red);
+            color:var(--bg);
+        }
+
+        .opt.bad .omark {
+            opacity:1;
+            color:var(--red);
+        }
+
+        .opt.miss {
+            border-color:var(--yellow);
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--yellow) 9%,
+                            transparent
+                    );
+        }
+
+        .opt.miss .omark {
+            opacity:1;
+            color:var(--yellow);
+        }
+
+
+        /* ============================================================
+           EXPLANATION
+           ============================================================ */
+
+        .exp {
+            margin-top:17px;
+            border-radius:14px;
+            overflow:hidden;
+
+            animation:
+                    expand .4s cubic-bezier(.2,.8,.3,1);
+        }
+
+        @keyframes expand {
+            from {
+                opacity:0;
+                max-height:0;
+            }
+
+            to {
+                opacity:1;
+                max-height:700px;
+            }
+        }
+
+        .exp-head {
+            padding:11px 16px;
+
+            font-weight:700;
+            font-size:14px;
+
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+
+        .exp.ok .exp-head {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--green) 13%,
+                            transparent
+                    );
+            color:var(--green);
+        }
+
+        .exp.no .exp-head {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--red) 13%,
+                            transparent
+                    );
+            color:var(--red);
+        }
+
+        .exp-body {
+            padding:14px 16px;
+
+            background:var(--opt-bg);
+
+            font-size:var(--fs-base);
+            line-height:1.6;
+        }
+
+        .exp-right {
+            margin-bottom:9px;
+            padding-bottom:9px;
+            border-bottom:1px solid var(--border);
+        }
+
+        .exp-right b {
+            color:var(--green);
+        }
+
+        .exp-why {
+            color:var(--muted);
+        }
+
+        .exp-why b {
+            color:var(--text);
+            font-weight:650;
+        }
+
+        .next-wrap {
+            margin-top:16px;
+        }
+
+        .next-btn {
+            padding:11px 22px;
+        }
+
+
+        /* ============================================================
+           RESULTS
+           ============================================================ */
+
+        .res {
+            text-align:center;
+            padding:40px 26px;
+
+            border:1px solid var(--border);
+            border-radius:20px;
+
+            background:var(--panel);
+            box-shadow:var(--shadow);
+
+            animation:slideIn .5s;
+        }
+
+        .res-emo {
+            font-size:58px;
+            margin-bottom:12px;
+        }
+
+        .res h2 {
+            color:var(--text-strong);
+            font-size:26px;
+            letter-spacing:-.03em;
+            margin-bottom:7px;
+        }
+
+        .res .grade {
+            color:var(--muted);
+            margin-bottom:26px;
+            font-size:var(--fs-base);
+        }
+
+        .stats {
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:12px;
+            max-width:420px;
+            margin:0 auto 26px;
+        }
+
+        .stat {
+            padding:16px 10px;
+
+            border:1px solid var(--border);
+            border-radius:14px;
+
+            background:var(--opt-bg);
+        }
+
+        .sval {
+            font-size:26px;
+            font-weight:800;
+            letter-spacing:-.03em;
+        }
+
+        .slbl {
+            color:var(--muted);
+            font-size:10.5px;
+            text-transform:uppercase;
+            letter-spacing:.07em;
+            margin-top:2px;
+        }
+
+        .stat.g .sval {
+            color:var(--green);
+        }
+
+        .stat.r .sval {
+            color:var(--red);
+        }
+
+        .stat.a .sval {
+            color:var(--accent);
+        }
+
+        .res-act {
+            display:flex;
+            gap:11px;
+            justify-content:center;
+            flex-wrap:wrap;
+        }
+
+        .hidden {
+            display:none !important;
+        }
+
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+
+        @media(max-width:700px) {
+            .settings {
+                position:static;
+
+                width:100%;
+                margin-bottom:18px;
+
+                justify-content:center;
+                flex-wrap:wrap;
+            }
+
+            .hero {
+                padding-top:0;
+            }
+        }
+
+        @media(max-width:600px) {
+            .wrap {
+                padding:24px 14px 60px;
+            }
+
+            .card {
+                padding:18px;
+            }
+
+            .q-text {
+                font-size:calc(var(--fs-base) + 1px);
+            }
+
+            .stats {
+                grid-template-columns:1fr;
+                max-width:230px;
+            }
+
+            .theme-select {
+                min-width:135px;
+            }
+
+            .font-slider {
+                width:75px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+    <!-- ============================================================
+         SETTINGS
+         ============================================================ -->
+
+    <div class="settings">
+
+        <select
+                id="themeSelect"
+                class="theme-select"
+                title="Выбрать тему"
+        >
+            <option value="gruvbox">☕ Gruvbox</option>
+            <option value="everforest">🌿 Everforest</option>
+            <option value="catppuccin">🐈 Catppuccin</option>
+            <option value="kanagawa">🌊 Kanagawa</option>
+            <option value="nord">❄️ Nord</option>
+            <option value="dracula">🧛 Dracula</option>
+            <option value="dark">🌙 GitHub Dark</option>
+            <option value="light">☀️ GitHub Light</option>
+        </select>
+
+        <div class="font-control">
+            <span>Текст:</span>
+            <span id="fontVal">15</span>px
+
+            <input
+                    type="range"
+                    id="fontSlider"
+                    class="font-slider"
+                    min="12"
+                    max="22"
+                    value="15"
+                    step="1"
+            >
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         MENU
+         ============================================================ -->
+
+    <section id="menu">
+
+        <div class="hero">
+
+            <div class="eyebrow">
+                Java Practice / theory quiz
+            </div>
+
+            <h1>
+                Тесты по теории
+            </h1>
+
+            <p>
+                Выбери тему или собери случайный набор.
+                После каждого ответа — подробный разбор,
+                почему правильный вариант именно такой.
+            </p>
+
+        </div>
+
+
+        <div class="grid" id="topicGrid"></div>
+
+
+        <div class="rnd">
+
+            <h2>
+                🎲 Случайный набор
+            </h2>
+
+            <div class="sub">
+                Вопросы берутся понемногу из каждой выбранной темы.
+            </div>
+
+            <div class="rnd-row">
+
+                <div class="cnt">
+                    <span>Вопросов:</span>
+
+                    <input
+                            type="number"
+                            id="rndCount"
+                            value="20"
+                            min="5"
+                            max="150"
+                    >
+                </div>
+
+                <label class="chk">
+                    <input
+                            type="checkbox"
+                            id="rndWidum"
+                            checked
+                    >
+                    Включить вопросы по рефлексии
+                </label>
+
+                <button
+                        class="primary"
+                        id="rndStart"
+                >
+                    Начать
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         QUIZ
+         ============================================================ -->
+
+    <section id="quiz" class="hidden">
+
+        <div class="qhead">
+
+            <div class="qbar">
+
+                <button
+                        class="back"
+                        id="quitBtn"
+                >
+                    ← Выйти
+                </button>
+
+                <span
+                        class="title"
+                        id="quizTitle"
+                ></span>
+
+                <span
+                        class="pill ok"
+                        id="pillOk"
+                >
+                    ✓ 0
+                </span>
+
+                <span
+                        class="pill bad"
+                        id="pillBad"
+                >
+                    ✗ 0
+                </span>
+
+            </div>
+
+            <div class="prog">
+                <div
+                        class="prog-fill"
+                        id="progFill"
+                        style="width:0%"
+                ></div>
+            </div>
+
+        </div>
+
+        <div
+                class="stack"
+                id="stack"
+        ></div>
+
+    </section>
+
+
+    <!-- ============================================================
+         RESULTS
+         ============================================================ -->
+
+    <section id="results" class="hidden">
+
+        <div class="res">
+
+            <div
+                    class="res-emo"
+                    id="resEmo"
+            >
+                🎉
+            </div>
+
+            <h2 id="resTitle"></h2>
+
+            <div
+                    class="grade"
+                    id="resGrade"
+            ></div>
+
+            <div class="stats">
+
+                <div class="stat g">
+                    <div
+                            class="sval"
+                            id="sOk"
+                    >
+                        0
+                    </div>
+
+                    <div class="slbl">
+                        Верно
+                    </div>
+                </div>
+
+                <div class="stat r">
+                    <div
+                            class="sval"
+                            id="sBad"
+                    >
+                        0
+                    </div>
+
+                    <div class="slbl">
+                        Ошибок
+                    </div>
+                </div>
+
+                <div class="stat a">
+                    <div
+                            class="sval"
+                            id="sPct"
+                    >
+                        0%
+                    </div>
+
+                    <div class="slbl">
+                        Результат
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="res-act">
+
+                <button
+                        class="primary"
+                        id="retryBtn"
+                >
+                    Пройти заново
+                </button>
+
+                <button id="reviewBtn">
+                    Посмотреть разбор
+                </button>
+
+                <button id="menuBtn">
+                    К списку тем
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+    "use strict";
+
+
+    /* ============================================================
+       БАНК ВОПРОСОВ
+
+       q       — вопрос
+       a       — варианты
+       correct — индексы верных ответов
+       exp     — объяснение
+       ============================================================ */
+
+    const BANK = {
+
+
+        /* ============================================================
+           ОСНОВЫ JAVA
+           ============================================================ */
+
+        basics: {
+            icon:"🔤",
+            name:"Основы Java",
+            q:[
+
+                {
+                    q:"Какой метод является точкой входа в Java-программу?",
+                    a:[
+                        "public static void main(String[] args)",
+                        "public void main()",
+                        "static main(String args)",
+                        "public static int main(String[] args)"
+                    ],
+                    correct:[0],
+                    exp:"JVM ищет метод с точной сигнатурой <code>public static void main(String[] args)</code>. Он должен быть <b>public</b>, <b>static</b> и <b>void</b>."
+                },
+
+                {
+                    q:"Сколько бит занимает тип int в Java?",
+                    a:[
+                        "16",
+                        "32",
+                        "64",
+                        "Зависит от операционной системы"
+                    ],
+                    correct:[1],
+                    exp:"В отличие от C, размеры примитивов в Java зафиксированы стандартом: <code>int</code> — всегда <b>32 бита</b> (4 байта) на любой платформе."
+                },
+
+                {
+                    q:"Что хранит переменная типа char?",
+                    a:[
+                        "Один байт ASCII",
+                        "Один символ Unicode (16-битную кодовую единицу)",
+                        "Строку произвольной длины",
+                        "Только цифры"
+                    ],
+                    correct:[1],
+                    exp:"<code>char</code> в Java — 16-битный целочисленный тип для символов UTF-16. Это не 8-битный <code>char</code> из C."
+                },
+
+                {
+                    q:"Какие значения может принимать boolean?",
+                    a:[
+                        "true и false",
+                        "true, false и 0/1",
+                        "0 и 1",
+                        "Любое целое число"
+                    ],
+                    correct:[0],
+                    exp:"<code>boolean</code> принимает только <code>true</code> и <code>false</code>. Числа в логическом контексте не преобразуются: <code>boolean b = 1;</code> — ошибка компиляции."
+                },
+
+                {
+                    q:"Что произойдёт, если прочитать локальную переменную до присваивания?",
+                    a:[
+                        "Получим 0",
+                        "Получим null",
+                        "Ошибка компиляции",
+                        "Ошибка времени выполнения"
+                    ],
+                    correct:[2],
+                    exp:"Локальные переменные <b>не инициализируются</b> автоматически. Компилятор требует присвоить значение до первого чтения. Значения по умолчанию есть только у полей класса и элементов массива."
+                },
+
+                {
+                    q:"Чем String отличается от примитива?",
+                    a:[
+                        "String — примитив, как int",
+                        "String — ссылочный тип (класс) из java.lang",
+                        "String занимает 4 байта",
+                        "String может хранить только латиницу"
+                    ],
+                    correct:[1],
+                    exp:"<code>String</code> — класс, а переменная хранит <b>ссылку</b> на объект. Поэтому сравнение строк через <code>==</code> сравнивает ссылки, а не содержимое."
+                },
+
+                {
+                    q:"Что означает final у переменной?",
+                    a:[
+                        "Значение нельзя переприсвоить",
+                        "Переменная доступна только в текущем классе",
+                        "Переменная становится константой времени компиляции всегда",
+                        "Переменная не может быть null"
+                    ],
+                    correct:[0],
+                    exp:"<code>final</code> запрещает повторное присваивание. Для ссылки на объект неизменной остаётся <b>ссылка</b>, а поля объекта менять можно. Константой времени компиляции переменная становится только если она final и примитив/String с литералом."
+                },
+
+                {
+                    q:"Во что компилируется Java-исходник?",
+                    a:[
+                        "В машинный код процессора",
+                        "В байт-код .class для JVM",
+                        "В исходник на C",
+                        "Сразу в exe-файл"
+                    ],
+                    correct:[1],
+                    exp:"<code>javac</code> создаёт платформенно-независимый <b>байт-код</b> в файлах <code>.class</code>. JVM исполняет его на конкретной машине."
+                }
+            ]
+        },
+
+
+        /* ============================================================
+           ВВОД И ВЫВОД
+           ============================================================ */
+
+        io: {
+            icon:"⌨️",
+            name:"Ввод и вывод",
+            q:[
+
+                {
+                    q:"Чем System.out.println отличается от System.out.print?",
+                    a:[
+                        "println переводит строку после вывода",
+                        "print переводит строку после вывода",
+                        "println работает только со строками",
+                        "Разницы нет"
+                    ],
+                    correct:[0],
+                    exp:"<b>println</b> добавляет перевод строки после значения, <b>print</b> — нет. Это важно для автотестов, где сравниваются точные байты вывода."
+                },
+
+                {
+                    q:"Почему после nextInt() вызов nextLine() может вернуть пустую строку?",
+                    a:[
+                        "nextInt оставляет в буфере символ перевода строки",
+                        "nextLine всегда возвращает пустую строку",
+                        "Scanner закрывает поток",
+                        "nextInt съедает следующую строку целиком"
+                    ],
+                    correct:[0],
+                    exp:"<code>nextInt()</code> читает только число и <b>не забирает</b> следующий за ним <code>\\n</code>. Ближайший <code>nextLine()</code> сразу видит конец строки. Решение — лишний <code>nextLine()</code> после числа."
+                },
+
+                {
+                    q:"Какой метод Scanner читает строку целиком до перевода строки?",
+                    a:[
+                        "next()",
+                        "nextLine()",
+                        "nextInt()",
+                        "nextToken()"
+                    ],
+                    correct:[1],
+                    exp:"<code>nextLine()</code> возвращает всю строку без завершающего <code>\\n</code>. <code>next()</code> читает только одно слово до пробела."
+                },
+
+                {
+                    q:"Что выведет System.out.printf(\"%.2f\", 3.14159)?",
+                    a:[
+                        "3.14159",
+                        "3.14",
+                        "3.15",
+                        "%.2f"
+                    ],
+                    correct:[1],
+                    exp:"<code>%.2f</code> — вещественное число с двумя знаками после точки. Остальные цифры округляются: <b>3.14</b>."
+                },
+
+                {
+                    q:"Почему в русской локали printf может напечатать 3,14 вместо 3.14?",
+                    a:[
+                        "Java всегда использует запятую",
+                        "Локаль определяет десятичный разделитель",
+                        "Scanner меняет локаль",
+                        "Это баг JDK"
+                    ],
+                    correct:[1],
+                    exp:"<code>printf</code> без явной локали берёт локаль системы, и в ней десятичный разделитель может быть запятой. Для стабильного вывода используют <code>System.out.printf(Locale.US, ...)</code>."
+                },
+
+                {
+                    q:"Что произойдёт при вызове nextInt(), если во вводе \"abc\"?",
+                    a:[
+                        "Вернётся 0",
+                        "Вернётся -1",
+                        "Будет брошено InputMismatchException",
+                        "Scanner вернёт null"
+                    ],
+                    correct:[2],
+                    exp:"<code>nextInt()</code> ожидает целое число. Если токен не парсится как <code>int</code>, бросается <b>InputMismatchException</b> — подкласс RuntimeException."
+                },
+
+                {
+                    q:"Для чего используется System.err?",
+                    a:[
+                        "Для потока сообщений об ошибках",
+                        "Для чтения ввода",
+                        "Для вывода в файл",
+                        "Он ничем не отличается от System.out"
+                    ],
+                    correct:[0],
+                    exp:"<code>System.err</code> — стандартный поток ошибок. Он отделён от <code>System.out</code>, чтобы диагностика не смешивалась с результатом программы."
+                },
+
+                {
+                    q:"Что выведет System.out.println() без аргументов?",
+                    a:[
+                        "Ничего",
+                        "Пустую строку и перевод строки",
+                        "null",
+                        "Ошибку компиляции"
+                    ],
+                    correct:[1],
+                    exp:"У <code>println()</code> есть перегрузка без аргументов: она печатает только перевод строки, то есть создаёт пустую строку."
+                }
+            ]
+        },
+
+
+        /* ============================================================
+           ВЫРАЖЕНИЯ И ТИПЫ
+           ============================================================ */
+
+        expr: {
+            icon:"➗",
+            name:"Выражения и типы",
+            q:[
+
+                {
+                    q:"Чему равно 7 / 2, если оба операнда int?",
+                    a:[
+                        "3.5",
+                        "3",
+                        "4",
+                        "Ошибка компиляции"
+                    ],
+                    correct:[1],
+                    exp:"При делении двух целых выполняется <b>целочисленное деление</b>: дробная часть отбрасывается. Результат — <b>3</b>. Для 3.5 нужен хотя бы один вещественный операнд."
+                },
+
+                {
+                    q:"Чему равно 7 % 2?",
+                    a:[
+                        "0",
+                        "1",
+                        "2",
+                        "3"
+                    ],
+                    correct:[1],
+                    exp:"<code>%</code> — остаток от деления. 7 = 3 * 2 + 1, поэтому остаток равен <b>1</b>."
+                },
+
+                {
+                    q:"Чему равно -7 % 2 в Java?",
+                    a:[
+                        "1",
+                        "-1",
+                        "0",
+                        "Ошибка компиляции"
+                    ],
+                    correct:[1],
+                    exp:"Знак остатка в Java совпадает со знаком <b>делимого</b>. Для -7 остаток <b>-1</b>. Если нужен всегда неотрицательный остаток, используют <code>((x % m) + m) % m</code>."
+                },
+
+                {
+                    q:"Чему равно 7 / 2.0?",
+                    a:[
+                        "3",
+                        "3.5",
+                        "4",
+                        "Ошибка компиляции"
+                    ],
+                    correct:[1],
+                    exp:"Один из операндов — <code>double</code>, поэтому деление вещественное: <b>3.5</b>. Целочисленное деление включается только когда оба операнда целые."
+                },
+
+                {
+                    q:"Чему равно (int) 3.99?",
+                    a:[
+                        "4",
+                        "3",
+                        "3.99",
+                        "Ошибка компиляции"
+                    ],
+                    correct:[1],
+                    exp:"Приведение <code>double</code> к <code>int</code> <b>отбрасывает</b> дробную часть, а не округляет. Результат — <b>3</b>. Для округления используют <code>Math.round</code>."
+                },
+
+                {
+                    q:"Какой тип результата у выражения int + long?",
+                    a:[
+                        "int",
+                        "long",
+                        "double",
+                        "Ошибка компиляции"
+                    ],
+                    correct:[1],
+                    exp:"Арифметическое продвижение приводит операнды к более широкому типу. <code>int</code> расширяется до <code>long</code>, результат — <b>long</b>."
+                },
+
+                {
+                    q:"Что произойдёт при вычислении Integer.MAX_VALUE + 1?",
+                    a:[
+                        "Получим 2147483648",
+                        "Будет исключение",
+                        "Произойдёт переполнение и получим -2147483648",
+                        "Компилятор не даст собрать код"
+                    ],
+                    correct:[2],
+                    exp:"В Java переполнение целых <b>не вызывает исключения</b> — значение циклически переходит через границу. Для больших сумм используют <code>long</code> или <code>Math.addExact</code>."
+                },
+
+                {
+                    q:"Чем i++ отличается от ++i?",
+                    a:[
+                        "Ничем",
+                        "i++ возвращает старое значение, ++i — новое",
+                        "i++ возвращает новое значение, ++i — старое",
+                        "++i работает только в цикле for"
+                    ],
+                    correct:[1],
+                    exp:"<code>i++</code> (постфикс) возвращает значение <b>до</b> увеличения, <code>++i</code> (префикс) — <b>после</b>. Сама переменная в обоих случаях увеличивается на 1."
+                },
+
+                {
+                    q:"Чему равно 2 + 3 * 4?",
+                    a:[
+                        "20",
+                        "14",
+                        "24",
+                        "9"
+                    ],
+                    correct:[1],
+                    exp:"Умножение имеет более высокий приоритет, чем сложение: 3 * 4 = 12, затем 2 + 12 = <b>14</b>."
+                }
+            ]
+        },
+
+
+        /* ============================================================
+           ЦИКЛЫ
+           ============================================================ */
+
+        loops: {
+            icon:"🔁",
+            name:"Циклы",
+            q:[
+
+                {
+                    q:"Сколько итераций выполнит цикл for (int i = 0; i < 5; i++)?",
+                    a:[
+                        "4",
+                        "5",
+                        "6",
+                        "Бесконечно"
+                    ],
+                    correct:[1],
+                    exp:"i принимает значения 0, 1, 2, 3, 4 — ровно <b>5</b> итераций. Условие <code>i &lt; 5</code> перестаёт выполняться при i = 5."
+                },
+
+                {
+                    q:"Какой цикл гарантированно выполнится хотя бы один раз?",
+                    a:[
+                        "for",
+                        "while",
+                        "do-while",
+                        "for-each"
+                    ],
+                    correct:[2],
+                    exp:"<code>do-while</code> сначала выполняет тело, потом проверяет условие. Остальные циклы могут не выполниться ни разу, если условие ложно с самого начала."
+                },
+
+                {
+                    q:"Что делает continue?",
+                    a:[
+                        "Прерывает цикл полностью",
+                        "Переходит к следующей итерации",
+                        "Выходит из метода",
+                        "Пропускает весь оставшийся код программы"
+                    ],
+                    correct:[1],
+                    exp:"<code>continue</code> завершает <b>текущую итерацию</b> и переходит к следующей. <code>break</code> — полностью прерывает цикл."
+                },
+
+                {
+                    q:"Что делает break внутри вложенных циклов?",
+                    a:[
+                        "Прерывает оба цикла",
+                        "Прерывает только внутренний цикл",
+                        "Переходит к следующей итерации",
+                        "Ничего"
+                    ],
+                    correct:[1],
+                    exp:"<code>break</code> выходит из <b>ближайшего</b> цикла. Чтобы выйти сразу из двух, используют метку: <code>outer:</code> и <code>break outer;</code>."
+                },
+
+                {
+                    q:"Где видна переменная i, объявленная в заголовке for (int i = 0; ...)?",
+                    a:[
+                        "Во всей программе",
+                        "Только внутри этого цикла",
+                        "Только в теле main",
+                        "В соседних циклах"
+                    ],
+                    correct:[1],
+                    exp:"Переменная из заголовка <code>for</code> имеет область видимости <b>внутри цикла</b>. После завершения цикла обратиться к ней нельзя."
+                },
+
+                {
+                    q:"Сколько раз выполнится тело внутреннего цикла при двух вложенных циклах по 3 итерации каждый?",
+                    a:[
+                        "3",
+                        "6",
+                        "9",
+                        "12"
+                    ],
+                    correct:[2],
+                    exp:"На каждую итерацию внешнего цикла внутренний проходит полностью: 3 * 3 = <b>9</b> раз."
+                },
+
+                {
+                    q:"Можно ли в for-each изменить элементы массива, присвоив новое значение переменной цикла?",
+                    a:[
+                        "Да, массив изменится",
+                        "Нет, переменная цикла — копия элемента",
+                        "Да, если массив final",
+                        "Только для строк"
+                    ],
+                    correct:[1],
+                    exp:"В <code>for (int x : a)</code> переменная <code>x</code> получает <b>копию</b> значения. Присваивание x не меняет массив. Менять сам массив нужно по индексу."
+                },
+
+                {
+                    q:"Что выведет цикл for (int i = 0; i < 5; i++) если печатать i при i % 2 == 0?",
+                    a:[
+                        "135",
+                        "024",
+                        "01234",
+                        "02"
+                    ],
+                    correct:[1],
+                    exp:"Чётные значения i в диапазоне 0..4 — это 0, 2, 4. Без разделителей получится <b>024</b>."
+                }
+            ]
+        },
+
+
+        /* ============================================================
+           МАССИВЫ
+           ============================================================ */
+
+        arrays: {
+            icon:"📦",
+            name:"Массивы",
+            q:[
+
+                {
+                    q:"Как узнать длину массива a?",
+                    a:[
+                        "a.length()",
+                        "a.length",
+                        "a.size()",
+                        "length(a)"
+                    ],
+                    correct:[1],
+                    exp:"У массива есть <b>поле</b> <code>length</code>, без скобок. Метод <code>size()</code> есть у коллекций, а не у массивов."
+                },
+
+                {
+                    q:"Какие индексы у массива из 5 элементов?",
+                    a:[
+                        "1..5",
+                        "0..5",
+                        "0..4",
+                        "1..4"
+                    ],
+                    correct:[2],
+                    exp:"Индексация начинается с нуля, поэтому допустимы индексы <b>0, 1, 2, 3, 4</b>. Обращение к a[5] — ошибка."
+                },
+
+                {
+                    q:"Какое значение по умолчанию получит элемент new int[3]?",
+                    a:[
+                        "null",
+                        "0",
+                        "Не определено",
+                        "Ошибка компиляции"
+                    ],
+                    correct:[1],
+                    exp:"Элементы массива инициализируются значениями по умолчанию: для <code>int</code> это <b>0</b>, для ссылочных типов — <code>null</code>, для <code>boolean</code> — <code>false</code>."
+                },
+
+                {
+                    q:"Что произойдёт при обращении к a[5] в массиве из 5 элементов?",
+                    a:[
+                        "Вернётся 0",
+                        "Вернётся последний элемент",
+                        "Будет ArrayIndexOutOfBoundsException",
+                        "Будет NullPointerException"
+                    ],
+                    correct:[2],
+                    exp:"Выход за границы массива — исключение <b>ArrayIndexOutOfBoundsException</b>. Java проверяет границы во время выполнения."
+                },
+
+                {
+                    q:"Что создаёт выражение new int[3]?",
+                    a:[
+                        "Массив из трёх нулей",
+                        "Одну переменную int",
+                        "Массив без элементов",
+                        "Ошибку компиляции"
+                    ],
+                    correct:[0],
+                    exp:"<code>new int[3]</code> выделяет массив на 3 элемента, каждый инициализирован нулём. Размер фиксируется при создании."
+                },
+
+                {
+                    q:"Чем является int[][] в Java?",
+                    a:[
+                        "Специальным примитивом",
+                        "Массивом массивов",
+                        "Матрицей фиксированного размера",
+                        "Коллекцией"
+                    ],
+                    correct:[1],
+                    exp:"Двумерный массив — это <b>массив ссылок на массивы</b>. Поэтому строки могут иметь разную длину (ступенчатый массив)."
+                },
+
+                {
+                    q:"Что произойдёт при присваивании int[] b = a;?",
+                    a:[
+                        "Массив скопируется",
+                        "b и a будут ссылаться на один массив",
+                        "Будет ошибка компиляции",
+                        "b станет копией только первого элемента"
+                    ],
+                    correct:[1],
+                    exp:"Присваивается <b>ссылка</b>, а не содержимое. Изменение b[0] отразится и в a[0]. Для копии используют <code>Arrays.copyOf</code> или <code>a.clone()</code>."
+                },
+
+                {
+                    q:"Можно ли изменить размер массива после создания?",
+                    a:[
+                        "Да, через a.length = 10",
+                        "Да, методом add",
+                        "Нет, размер фиксирован",
+                        "Только для массивов строк"
+                    ],
+                    correct:[2],
+                    exp:"Размер массива задаётся при создании и <b>не меняется</b>. Для динамического размера используют <code>ArrayList</code>."
+                }
+            ]
+        },
+
+
+        /* ============================================================
+           СТРОКИ
+           ============================================================ */
+
+        strings: {
+            icon:"🔠",
+            name:"Строки",
+            q:[
+
+                {
+                    q:"Что означает неизменяемость String?",
+                    a:[
+                        "Строковые переменные нельзя объявлять",
+                        "Содержимое объекта String нельзя изменить после создания",
+                        "Строки нельзя сравнивать",
+                        "Строки нельзя выводить"
+                    ],
+                    correct:[1],
+                    exp:"Объект <code>String</code> неизменен: методы вроде <code>toUpperCase()</code> возвращают <b>новую</b> строку, а исходная остаётся прежней."
+                },
+
+                {
+                    q:"Как правильно сравнить содержимое двух строк?",
+                    a:[
+                        "s1 == s2",
+                        "s1.equals(s2)",
+                        "s1.compare(s2)",
+                        "s1 - s2"
+                    ],
+                    correct:[1],
+                    exp:"<code>==</code> сравнивает <b>ссылки</b>, а <code>equals</code> — содержимое. Две одинаковые строки могут быть разными объектами."
+                },
+
+                {
+                    q:"Как получить длину строки s?",
+                    a:[
+                        "s.length",
+                        "s.length()",
+                        "s.size()",
+                        "len(s)"
+                    ],
+                    correct:[1],
+                    exp:"У строки длина — <b>метод</b> <code>length()</code> со скобками. У массива — поле <code>length</code> без скобок."
+                },
+
+                {
+                    q:"Что вернёт \"hello\".substring(1, 3)?",
+                    a:[
+                        "hel",
+                        "ell",
+                        "el",
+                        "ell o"
+                    ],
+                    correct:[2],
+                    exp:"<code>substring(begin, end)</code> берёт символы с <code>begin</code> включительно до <code>end</code> <b>не включая</b>. Индексы 1 и 2 — это <b>\"el\"</b>."
+                },
+
+                {
+                    q:"Что делает \"a b  c\".split(\"\\\\s+\")?",
+                    a:[
+                        "Делит по одному пробелу",
+                        "Делит по одному или нескольким пробельным символам",
+                        "Удаляет пробелы",
+                        "Ошибка компиляции"
+                    ],
+                    correct:[1],
+                    exp:"Аргумент <code>split</code> — регулярное выражение. <code>\\s+</code> означает один или несколько пробельных символов, поэтому пустых элементов между пробелами не будет."
+                },
+
+                {
+                    q:"Зачем используют StringBuilder?",
+                    a:[
+                        "Для хранения чисел",
+                        "Для эффективной сборки строки из многих частей",
+                        "Для сравнения строк",
+                        "Для чтения файлов"
+                    ],
+                    correct:[1],
+                    exp:"<code>StringBuilder</code> — изменяемый буфер. При многократной конкатенации в цикле он работает эффективнее, чем создание множества новых объектов String."
+                },
+
+                {
+                    q:"Что вернёт \"Java\".charAt(1)?",
+                    a:[
+                        "J",
+                        "a",
+                        "v",
+                        "Ошибку"
+                    ],
+                    correct:[1],
+                    exp:"Индексация строки начинается с нуля: индекс 0 — 'J', индекс 1 — <b>'a'</b>. Возвращается тип <code>char</code>."
+                },
+
+                {
+                    q:"Что делает trim()?",
+                    a:[
+                        "Удаляет все пробелы внутри строки",
+                        "Удаляет пробелы в начале и конце",
+                        "Приводит строку к нижнему регистру",
+                        "Обрезает строку до 10 символов"
+                    ],
+                    correct:[1],
+                    exp:"<code>trim()</code> убирает пробельные символы с <b>краёв</b> строки. Внутренние пробелы остаются."
+                },
+
+                {
+                    q:"Как объединить массив строк в одну строку через пробел?",
+                    a:[
+                        "String.join(\" \", words)",
+                        "words.join(\" \")",
+                        "words.concat(\" \")",
+                        "String.merge(words)"
+                    ],
+                    correct:[0],
+                    exp:"<code>String.join(разделитель, элементы)</code> — статический метод, доступный с Java 8. Он соединяет элементы через разделитель."
+                }
+            ]
+        },
+
+
+        /* ============================================================
+           ООП
+           ============================================================ */
+
+        oop: {
+            icon:"🧱",
+            name:"ООП",
+            q:[
+
+                {
+                    q:"Чем класс отличается от объекта?",
+                    a:[
+                        "Класс — шаблон, объект — экземпляр класса",
+                        "Объект — шаблон, класс — экземпляр",
+                        "Это одно и то же",
+                        "Класс существует только во время выполнения"
+                    ],
+                    correct:[0],
+                    exp:"Класс описывает поля и методы, а <b>объект</b> — конкретный экземпляр, созданный через <code>new</code>."
+                },
+
+                {
+                    q:"Каким должно быть имя конструктора?",
+                    a:[
+                        "Любым",
+                        "Совпадать с именем класса",
+                        "Всегда init",
+                        "Совпадать с именем пакета"
+                    ],
+                    correct:[1],
+                    exp:"Конструктор называется так же, как класс, и <b>не имеет возвращаемого типа</b> — даже <code>void</code> писать нельзя."
+                },
+
+                {
+                    q:"Что делает this(...) внутри конструктора?",
+                    a:[
+                        "Создаёт новый объект",
+                        "Вызывает другой конструктор этого же класса",
+                        "Обращается к родителю",
+                        "Возвращает текущий объект"
+                    ],
+                    correct:[1],
+                    exp:"<code>this(...)</code> вызывает другой конструктор этого класса и должен стоять <b>первой строкой</b>. Для родителя используют <code>super(...)</code>."
+                },
+
+                {
+                    q:"Что означает static у поля или метода?",
+                    a:[
+                        "Он принадлежит классу, а не конкретному объекту",
+                        "Он неизменяем",
+                        "Он приватный",
+                        "Он создаётся для каждого объекта"
+                    ],
+                    correct:[0],
+                    exp:"<b>static</b> означает принадлежность классу: к нему обращаются через имя класса. Статический метод не имеет доступа к нестатическим полям напрямую."
+                },
+
+                {
+                    q:"Что такое инкапсуляция?",
+                    a:[
+                        "Наследование от одного класса",
+                        "Скрытие внутреннего состояния за приватными полями и методами доступа",
+                        "Создание интерфейсов",
+                        "Перегрузка методов"
+                    ],
+                    correct:[1],
+                    exp:"Инкапсуляция — скрытие деталей реализации: поля делают <code>private</code>, а доступ дают через <code>get</code>/<code>set</code> или публичные методы."
+                },
+
+                {
+                    q:"Сколько классов можно указать после extends?",
+                    a:[
+                        "Один",
+                        "Два",
+                        "Любое количество",
+                        "Ни одного"
+                    ],
+                    correct:[0],
+                    exp:"В Java класс может наследоваться только от <b>одного</b> класса. Множественное наследование типов реализуют через интерфейсы (<code>implements</code>)."
+                },
+
+                {
+                    q:"Что даёт полиморфизм?",
+                    a:[
+                        "Вызов переопределённого метода через ссылку базового типа",
+                        "Ускорение программы",
+                        "Запрет наследования",
+                        "Автоматическое создание конструкторов"
+                    ],
+                    correct:[0],
+                    exp:"Если <code>Circle extends Shape</code> и переопределяет <code>area()</code>, то вызов <code>shape.area()</code> через ссылку <code>Shape</code> выполнит версию <code>Circle</code>."
+                },
+
+                {
+                    q:"Что можно сказать об abstract-классе?",
+                    a:[
+                        "Нельзя создать его экземпляр",
+                        "В нём не может быть обычных методов",
+                        "От него нельзя наследоваться",
+                        "Все его методы обязаны быть static"
+                    ],
+                    correct:[0],
+                    exp:"<code>abstract</code>-класс нельзя инстанцировать через <code>new</code>, но можно наследовать. В нём допустимы и конкретные, и абстрактные методы."
+                },
+
+                {
+                    q:"Зачем переопределять equals и hashCode вместе?",
+                    a:[
+                        "Так требует компилятор",
+                        "Равные объекты обязаны иметь одинаковый hashCode",
+                        "Для ускорения компиляции",
+                        "hashCode используется только в массивах"
+                    ],
+                    correct:[1],
+                    exp:"Контракт: если <code>a.equals(b)</code>, то <code>a.hashCode() == b.hashCode()</code>. Иначе объекты будут теряться в <code>HashMap</code> и <code>HashSet</code>."
+                }
+            ]
+        },
+
+
+        /* ============================================================
+           КОЛЛЕКЦИИ
+           ============================================================ */
+
+        collections: {
+            icon:"🗂️",
+            name:"Коллекции",
+            q:[
+
+                {
+                    q:"Чем ArrayList отличается от массива?",
+                    a:[
+                        "Может менять размер во время работы",
+                        "Хранит только числа",
+                        "Не имеет индексов",
+                        "Работает быстрее массива всегда"
+                    ],
+                    correct:[0],
+                    exp:"<code>ArrayList</code> — динамический список: при добавлении он растёт. Массив имеет фиксированную длину."
+                },
+
+                {
+                    q:"Почему нельзя объявить List<int>?",
+                    a:[
+                        "Generics работают только с ссылочными типами",
+                        "List не поддерживает числа",
+                        "int слишком большой",
+                        "Это разрешено"
+                    ],
+                    correct:[0],
+                    exp:"В generics используют <b>обёртки</b>: <code>List&lt;Integer&gt;</code>. Примитив <code>int</code> подставляется через автоупаковку, но в угловых скобках недопустим."
+                },
+
+                {
+                    q:"Что произойдёт при повторном put с тем же ключом в Map?",
+                    a:[
+                        "Появится второй элемент",
+                        "Старое значение заменится новым",
+                        "Будет исключение",
+                        "Ключ станет null"
+                    ],
+                    correct:[1],
+                    exp:"Ключи в <code>Map</code> уникальны. Повторный <code>put</code> <b>перезаписывает</b> значение и возвращает предыдущее."
+                },
+
+                {
+                    q:"Гарантирует ли HashMap порядок элементов?",
+                    a:[
+                        "Да, порядок вставки",
+                        "Да, алфавитный порядок",
+                        "Нет, порядок не определён",
+                        "Только для строковых ключей"
+                    ],
+                    correct:[2],
+                    exp:"<code>HashMap</code> не гарантирует порядок. Для порядка вставки есть <code>LinkedHashMap</code>, для сортировки по ключу — <code>TreeMap</code>."
+                },
+
+                {
+                    q:"Что делает Set?",
+                    a:[
+                        "Хранит пары ключ-значение",
+                        "Хранит уникальные элементы",
+                        "Хранит элементы по индексу",
+                        "Сортирует любые объекты"
+                    ],
+                    correct:[1],
+                    exp:"<code>Set</code> не допускает дубликатов. <code>HashSet</code> не гарантирует порядок, <code>TreeSet</code> сортирует элементы."
+                },
+
+                {
+                    q:"Что вернёт map.getOrDefault(\"x\", 0), если ключа нет?",
+                    a:[
+                        "null",
+                        "0",
+                        "Исключение",
+                        "-1"
+                    ],
+                    correct:[1],
+                    exp:"<code>getOrDefault</code> возвращает значение по ключу, а если ключа нет — <b>заданное по умолчанию</b> значение (здесь 0)."
+                },
+
+                {
+                    q:"Почему удаление из коллекции в for-each через remove приводит к ошибке?",
+                    a:[
+                        "Коллекция становится пустой",
+                        "Будет ConcurrentModificationException",
+                        "Будет StackOverflowError",
+                        "Ничего не произойдёт"
+                    ],
+                    correct:[1],
+                    exp:"for-each использует итератор, и структурное изменение коллекции напрямую ломает его состояние. Безопасно удалять через <code>iterator.remove()</code>."
+                },
+
+                {
+                    q:"Чем Comparator отличается от Comparable?",
+                    a:[
+                        "Comparator задаёт внешний порядок, Comparable — естественный порядок класса",
+                        "Это одно и то же",
+                        "Comparable работает только с числами",
+                        "Comparator нельзя передать в sort"
+                    ],
+                    correct:[0],
+                    exp:"<code>Comparable</code> реализует сам класс (<code>compareTo</code>), задавая естественный порядок. <code>Comparator</code> — отдельный объект сравнения, его передают в <code>sort</code>."
+                }
+            ]
+        },
+
+
+        /* ============================================================
+           ИСКЛЮЧЕНИЯ
+           ============================================================ */
+
+        exceptions: {
+            icon:"⚠️",
+            name:"Исключения",
+            q:[
+
+                {
+                    q:"Какие исключения называют checked?",
+                    a:[
+                        "Все исключения",
+                        "Те, которые компилятор требует обработать или объявить",
+                        "Только RuntimeException",
+                        "Только Error"
+                    ],
+                    correct:[1],
+                    exp:"Checked-исключения (наследники <code>Exception</code>, но не <code>RuntimeException</code>) обязаны быть пойманы или объявлены через <code>throws</code>."
+                },
+
+                {
+                    q:"Что гарантирует блок finally?",
+                    a:[
+                        "Что программа не упадёт",
+                        "Что его код выполнится при выходе из try",
+                        "Что исключение будет проигнорировано",
+                        "Что метод вернёт значение"
+                    ],
+                    correct:[1],
+                    exp:"<code>finally</code> выполняется почти всегда: и при успехе, и при исключении. Исключение — <code>System.exit</code> или аварийное завершение JVM."
+                },
+
+                {
+                    q:"Чем throw отличается от throws?",
+                    a:[
+                        "Это синонимы",
+                        "throw бросает исключение, throws объявляет его в сигнатуре",
+                        "throw объявляет, throws бросает",
+                        "throws работает только в main"
+                    ],
+                    correct:[1],
+                    exp:"<code>throw new Exception()</code> — само действие. <code>throws IOException</code> в заголовке метода — предупреждение вызывающему коду."
+                },
+
+                {
+                    q:"Какое исключение возникнет при целочисленном делении на ноль?",
+                    a:[
+                        "NullPointerException",
+                        "ArithmeticException",
+                        "NumberFormatException",
+                        "IOException"
+                    ],
+                    correct:[1],
+                    exp:"Деление целого на ноль даёт <b>ArithmeticException</b>. Вещественное деление на ноль, наоборот, вернёт Infinity или NaN."
+                },
+
+                {
+                    q:"Что бросит Integer.parseInt(\"12a\")?",
+                    a:[
+                        "ArithmeticException",
+                        "NumberFormatException",
+                        "ClassCastException",
+                        "Ничего, вернёт 12"
+                    ],
+                    correct:[1],
+                    exp:"<code>parseInt</code> требует строку целиком из цифр (и знака). Лишний символ — <b>NumberFormatException</b>."
+                },
+
+                {
+                    q:"Как создать собственное checked-исключение?",
+                    a:[
+                        "extends Error",
+                        "extends Exception",
+                        "implements Throwable",
+                        "extends RuntimeException"
+                    ],
+                    correct:[1],
+                    exp:"Наследник <code>Exception</code> (не RuntimeException) — checked. Наследник <code>RuntimeException</code> был бы unchecked."
+                },
+
+                {
+                    q:"В каком порядке нужно располагать catch-блоки?",
+                    a:[
+                        "От общего к частному",
+                        "От частного к общему",
+                        "Порядок не важен",
+                        "Сначала finally"
+                    ],
+                    correct:[1],
+                    exp:"Если общий <code>catch (Exception e)</code> поставить первым, он перехватит всё, и последующие блоки станут недостижимы. Сначала — более конкретные типы."
+                },
+
+                {
+                    q:"Что можно сказать о try-with-resources?",
+                    a:[
+                        "Он автоматически закрывает ресурсы, реализующие AutoCloseable",
+                        "Он заменяет catch",
+                        "Он работает только с файлами",
+                        "Он требует JDK 21"
+                    ],
+                    correct:[0],
+                    exp:"Конструкция <code>try (Resource r = ...)</code> закрывает ресурс автоматически в конце блока. Появилась в Java 7 и работает с любым <code>AutoCloseable</code>."
+                }
+            ]
+        },
+
+
+        /* ============================================================
+           ФАЙЛЫ
+           ============================================================ */
+
+        files: {
+            icon:"📁",
+            name:"Файлы",
+            q:[
+
+                {
+                    q:"Какой пакет содержит современный API работы с файлами?",
+                    a:[
+                        "java.io только",
+                        "java.nio.file",
+                        "java.util.files",
+                        "java.lang.io"
+                    ],
+                    correct:[1],
+                    exp:"<code>java.nio.file</code> — современный API: <code>Path</code>, <code>Paths</code>, <code>Files</code>. Старый <code>java.io</code> тоже работает, но чаще используется для потоков."
+                },
+
+                {
+                    q:"Какую кодировку стоит указывать при чтении текстового файла?",
+                    a:[
+                        "Любую, Java угадает",
+                        "UTF-8 через StandardCharsets.UTF_8",
+                        "Только ASCII",
+                        "Кодировку указывать нельзя"
+                    ],
+                    correct:[1],
+                    exp:"Кодировку задают явно, иначе используется системная, и результат зависит от платформы. <code>StandardCharsets.UTF_8</code> — надёжный выбор."
+                },
+
+                {
+                    q:"Какой метод читает все строки файла в список?",
+                    a:[
+                        "Files.readAllLines(path, charset)",
+                        "Files.open(path)",
+                        "Files.lines(path)",
+                        "Files.read(path)"
+                    ],
+                    correct:[0],
+                    exp:"<code>Files.readAllLines</code> возвращает <code>List&lt;String&gt;</code>. <code>Files.lines</code> возвращает поток строк и требует закрытия."
+                },
+
+                {
+                    q:"К какому типу исключений относится IOException?",
+                    a:[
+                        "Unchecked",
+                        "Checked",
+                        "Error",
+                        "Оно не существует"
+                    ],
+                    correct:[1],
+                    exp:"<code>IOException</code> — <b>checked</b>-исключение. Его нужно ловить или объявлять в <code>throws</code>."
+                },
+
+                {
+                    q:"Сколько байт занимает буква «я» в UTF-8?",
+                    a:[
+                        "1",
+                        "2",
+                        "3",
+                        "4"
+                    ],
+                    correct:[1],
+                    exp:"Кириллица в UTF-8 занимает <b>2 байта</b> на символ, а латиница — 1. Поэтому длина в байтах и длина в символах могут различаться."
+                },
+
+                {
+                    q:"Какое исключение возникнет при чтении несуществующего файла через Files.readAllBytes?",
+                    a:[
+                        "NullPointerException",
+                        "NoSuchFileException (подкласс IOException)",
+                        "FileNotFoundException только",
+                        "Ошибки не будет, вернётся пустой массив"
+                    ],
+                    correct:[1],
+                    exp:"Современный API бросает <b>NoSuchFileException</b> — подкласс <code>IOException</code>. Проверить наличие заранее можно через <code>Files.exists</code>."
+                },
+
+                {
+                    q:"Что делает path.resolve(\"data.txt\")?",
+                    a:[
+                        "Читает файл",
+                        "Строит новый путь, присоединяя имя к базовому",
+                        "Удаляет файл",
+                        "Проверяет существование"
+                    ],
+                    correct:[1],
+                    exp:"<code>resolve</code> присоединяет относительный путь к текущему и возвращает новый <code>Path</code>. Файл при этом не трогается."
+                },
+
+                {
+                    q:"Что делает Files.copy(source, target, REPLACE_EXISTING)?",
+                    a:[
+                        "Копирует файл, перезаписывая существующий target",
+                        "Перемещает файл",
+                        "Копирует только если target не существует",
+                        "Создаёт символическую ссылку"
+                    ],
+                    correct:[0],
+                    exp:"Без опции <code>REPLACE_EXISTING</code> копирование в существующий файл бросит исключение. Опция разрешает <b>перезапись</b>."
+                }
+            ]
+        },
+
+
+        /* ============================================================
+           ПОТОКИ
+           ============================================================ */
+
+        threads: {
+            icon:"🧵",
+            name:"Потоки",
+            q:[
+
+                {
+                    q:"Как запустить новый поток выполнения?",
+                    a:[
+                        "Вызвать run()",
+                        "Вызвать start()",
+                        "Вызвать main()",
+                        "Создать объект Thread без вызова методов"
+                    ],
+                    correct:[1],
+                    exp:"<code>start()</code> создаёт новый поток и уже в нём вызывает <code>run()</code>. Прямой вызов <code>run()</code> выполнит код в текущем потоке."
+                },
+
+                {
+                    q:"Что делает join()?",
+                    a:[
+                        "Останавливает поток навсегда",
+                        "Ждёт завершения потока",
+                        "Объединяет два потока",
+                        "Запускает поток"
+                    ],
+                    correct:[1],
+                    exp:"<code>join()</code> блокирует вызывающий поток, пока целевой не завершится. После этого видны результаты его работы."
+                },
+
+                {
+                    q:"Зачем нужен synchronized?",
+                    a:[
+                        "Чтобы поток работал быстрее",
+                        "Чтобы обеспечить взаимное исключение при доступе к общим данным",
+                        "Чтобы создать новый поток",
+                        "Чтобы завершить поток"
+                    ],
+                    correct:[1],
+                    exp:"<code>synchronized</code> гарантирует, что критическую секцию в один момент выполняет только один поток. Это защищает от гонок данных."
+                },
+
+                {
+                    q:"Что такое состояние гонки (race condition)?",
+                    a:[
+                        "Ошибка компиляции",
+                        "Результат зависит от порядка выполнения потоков",
+                        "Соревнование потоков за память",
+                        "Зависание программы"
+                    ],
+                    correct:[1],
+                    exp:"Если несколько потоков читают и меняют общие данные без синхронизации, итог зависит от планировщика. Пример — потерянные инкременты счётчика."
+                },
+
+                {
+                    q:"Что гарантирует volatile?",
+                    a:[
+                        "Атомарность операций",
+                        "Видимость изменений между потоками",
+                        "Взаимное исключение",
+                        "Ускорение работы"
+                    ],
+                    correct:[1],
+                    exp:"<code>volatile</code> гарантирует, что запись сразу видна другим потокам, но не делает составные операции (<code>x++</code>) атомарными."
+                },
+
+                {
+                    q:"Что возвращает Future.get()?",
+                    a:[
+                        "Поток",
+                        "Результат выполненной задачи",
+                        "Исключение всегда",
+                        "Ничего"
+                    ],
+                    correct:[1],
+                    exp:"<code>Future.get()</code> ждёт завершения задачи и возвращает её результат. Если задача бросила исключение, оно будет обёрнуто в <code>ExecutionException</code>."
+                },
+
+                {
+                    q:"К какому типу относится InterruptedException?",
+                    a:[
+                        "Unchecked",
+                        "Checked",
+                        "Error",
+                        "Оно не существует"
+                    ],
+                    correct:[1],
+                    exp:"<code>InterruptedException</code> — checked-исключение. При его перехвате хорошей практикой считается восстановить флаг: <code>Thread.currentThread().interrupt()</code>."
+                },
+
+                {
+                    q:"Что такое deadlock?",
+                    a:[
+                        "Потоки ждут друг друга и не могут продолжить",
+                        "Поток завершился с ошибкой",
+                        "Поток выполняется слишком быстро",
+                        "Утечка памяти"
+                    ],
+                    correct:[0],
+                    exp:"Взаимная блокировка возникает, когда потоки захватили ресурсы в разном порядке и ждут освобождения друг друга. Программа зависает."
+                }
+            ]
+        },
+
+
+        /* ============================================================
+           РЕФЛЕКСИЯ И ПРОДВИНУТОЕ
+           ============================================================ */
+
+        widum: {
+            icon:"🔍",
+            name:"Рефлексия",
+            note:"Раздел 13: advanced",
+            src:true,
+            q:[
+
+                {
+                    q:"Как получить объект Class для типа Person?",
+                    a:[
+                        "Person.class",
+                        "Class.of(Person)",
+                        "new Class(Person)",
+                        "Person.getClass()"
+                    ],
+                    correct:[0],
+                    exp:"<code>Person.class</code> — литерал класса. Также работают <code>person.getClass()</code> для экземпляра и <code>Class.forName(\"Person\")</code>."
+                },
+
+                {
+                    q:"Чем getDeclaredFields() отличается от getFields()?",
+                    a:[
+                        "Ничем",
+                        "getDeclaredFields возвращает все поля класса, включая приватные",
+                        "getFields возвращает только приватные",
+                        "getDeclaredFields возвращает только static"
+                    ],
+                    correct:[1],
+                    exp:"<code>getFields()</code> — только публичные, включая унаследованные. <code>getDeclaredFields()</code> — все поля, объявленные в самом классе, любого уровня доступа."
+                },
+
+                {
+                    q:"Что делает setAccessible(true) у Field?",
+                    a:[
+                        "Делает поле публичным навсегда",
+                        "Разрешает читать и менять приватное поле через рефлексию",
+                        "Удаляет модификатор private из байт-кода",
+                        "Создаёт копию поля"
+                    ],
+                    correct:[1],
+                    exp:"<code>setAccessible(true)</code> отключает проверку доступа для данного элемента. Без него <code>get</code>/<code>set</code> приватного поля бросят <code>IllegalAccessException</code>."
+                },
+
+                {
+                    q:"Что возвращает Method.invoke()?",
+                    a:[
+                        "Всегда void",
+                        "Object: результат метода (примитивы упакованы)",
+                        "Строку с именем метода",
+                        "Сам объект Method"
+                    ],
+                    correct:[1],
+                    exp:"<code>invoke</code> возвращает <code>Object</code>. <code>int</code> приходит как <code>Integer</code>, <code>void</code>-метод даёт <code>null</code>."
+                },
+
+                {
+                    q:"Как найти метод square(int) через рефлексию?",
+                    a:[
+                        "getMethod(\"square\", Integer.class)",
+                        "getMethod(\"square\", int.class)",
+                        "getMethod(\"square\")",
+                        "getMethod(int.class)"
+                    ],
+                    correct:[1],
+                    exp:"Сигнатура задаётся точно: параметр метода — примитив <code>int</code>, значит нужен <code>int.class</code>. <code>Integer.class</code> не подойдёт."
+                },
+
+                {
+                    q:"Какое исключение объединяет NoSuchMethodException и IllegalAccessException?",
+                    a:[
+                        "RuntimeException",
+                        "ReflectiveOperationException",
+                        "IOException",
+                        "ClassNotFoundException"
+                    ],
+                    correct:[1],
+                    exp:"Оба — подклассы <code>ReflectiveOperationException</code> (Java 7+), поэтому один <code>catch</code> покрывает типичные ошибки рефлексии."
+                },
+
+                {
+                    q:"Когда работает рефлексия?",
+                    a:[
+                        "Только во время компиляции",
+                        "Во время выполнения программы",
+                        "Только в тестах",
+                        "Только для публичных классов"
+                    ],
+                    correct:[1],
+                    exp:"Рефлексия исследует классы <b>в runtime</b>. Именно поэтому фреймворки могут работать с классами, о которых ничего не знали при компиляции."
+                },
+
+                {
+                    q:"Где рефлексия применяется на практике?",
+                    a:[
+                        "В Spring, JUnit и Jackson",
+                        "Только в играх",
+                        "Только в Android",
+                        "Нигде, это устаревшая технология"
+                    ],
+                    correct:[0],
+                    exp:"Spring ищет аннотации и внедряет зависимости, JUnit находит методы <code>@Test</code>, Jackson сериализует объекты по полям — всё это рефлексия."
+                }
+            ]
+        }
+    };
+
+
+    /* ============================================================
+       THEME / FONT
+       ============================================================ */
+
+    const root = document.documentElement;
+
+    const themeSelect = document.getElementById("themeSelect");
+    const fontSlider = document.getElementById("fontSlider");
+    const fontVal = document.getElementById("fontVal");
+
+    function setTheme(theme) {
+        root.setAttribute("data-theme", theme);
+
+        themeSelect.value = theme;
+
+        try {
+            localStorage.setItem(
+                "java-practice-quiz-theme",
+                theme
+            );
+        } catch (e) {}
+    }
+
+    function setFontSize(val) {
+        root.style.setProperty(
+            "--fs-base",
+            val + "px"
+        );
+
+        fontVal.textContent = val;
+        fontSlider.value = val;
+
+        try {
+            localStorage.setItem(
+                "java-practice-quiz-font",
+                val
+            );
+        } catch (e) {}
+    }
+
+    themeSelect.addEventListener(
+        "change",
+        function () {
+            setTheme(this.value);
+        }
+    );
+
+    fontSlider.addEventListener(
+        "input",
+        function () {
+            setFontSize(this.value);
+        }
+    );
+
+    (function () {
+        let savedTheme = null;
+        let savedFont = null;
+
+        try {
+            savedTheme =
+                localStorage.getItem(
+                    "java-practice-quiz-theme"
+                );
+
+            savedFont =
+                localStorage.getItem(
+                    "java-practice-quiz-font"
+                );
+        } catch (e) {}
+
+        setTheme(
+            savedTheme || "catppuccin"
+        );
+
+        setFontSize(
+            savedFont || "15"
+        );
+    })();
+
+
+    /* ============================================================
+       HELPERS
+       ============================================================ */
+
+    const KEYS = [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+    ];
+
+    const $ = id =>
+        document.getElementById(id);
+
+    const screens = {
+        menu: $("menu"),
+        quiz: $("quiz"),
+        results: $("results")
+    };
+
+    let session = null;
+
+
+    function show(name) {
+        for (const k in screens) {
+            screens[k].classList.toggle(
+                "hidden",
+                k !== name
+            );
+        }
+
+        window.scrollTo({
+            top:0,
+            behavior:"instant"
+        });
+    }
+
+
+    function shuffle(a) {
+        for (
+            let i = a.length - 1;
+            i > 0;
+            i--
+        ) {
+            const j =
+                Math.floor(
+                    Math.random() * (i + 1)
+                );
+
+            [
+                a[i],
+                a[j]
+            ] = [
+                a[j],
+                a[i]
+            ];
+        }
+
+        return a;
+    }
+
+
+    function plural(
+        n,
+        one,
+        few,
+        many
+    ) {
+        const m10 = n % 10;
+        const m100 = n % 100;
+
+        if (
+            m10 === 1 &&
+            m100 !== 11
+        ) {
+            return one;
+        }
+
+        if (
+            m10 >= 2 &&
+            m10 <= 4 &&
+            (
+                m100 < 10 ||
+                m100 >= 20
+            )
+        ) {
+            return few;
+        }
+
+        return many;
+    }
+
+
+    function el(
+        tag,
+        cls,
+        txt
+    ) {
+        const n =
+            document.createElement(tag);
+
+        if (cls) {
+            n.className = cls;
+        }
+
+        if (txt !== undefined) {
+            n.textContent = txt;
+        }
+
+        return n;
+    }
+
+
+    /* ============================================================
+       MENU
+       ============================================================ */
+
+    function buildMenu() {
+        const grid =
+            $("topicGrid");
+
+        grid.replaceChildren();
+
+        for (const key in BANK) {
+
+            const t =
+                BANK[key];
+
+            const b =
+                el(
+                    "button",
+                    "topic" +
+                    (
+                        t.src
+                            ? " special"
+                            : ""
+                    )
+                );
+
+            b.append(
+                el(
+                    "span",
+                    "t-icon",
+                    t.icon
+                ),
+
+                el(
+                    "div",
+                    "t-name",
+                    t.name
+                ),
+
+                el(
+                    "div",
+                    "t-count",
+                    t.q.length +
+                    " " +
+                    plural(
+                        t.q.length,
+                        "вопрос",
+                        "вопроса",
+                        "вопросов"
+                    )
+                )
+            );
+
+            if (t.note) {
+                b.appendChild(
+                    el(
+                        "div",
+                        "t-note",
+                        "⚠ " + t.note
+                    )
+                );
+            }
+
+            b.addEventListener(
+                "click",
+                () => {
+
+                    const qs =
+                        t.q.map(
+                            q => ({
+                                ...q,
+                                _topic:t.name,
+                                _src:!!t.src
+                            })
+                        );
+
+                    startQuiz(
+                        t.name,
+                        shuffle(qs)
+                    );
+                }
+            );
+
+            grid.appendChild(b);
+        }
+    }
+
+
+    $("rndStart").addEventListener(
+        "click",
+        () => {
+
+            const want =
+                Math.max(
+                    5,
+                    Math.min(
+                        150,
+                        parseInt(
+                            $("rndCount").value
+                        ) || 20
+                    )
+                );
+
+            const useW =
+                $("rndWidum").checked;
+
+            const pools = [];
+
+            for (const key in BANK) {
+
+                if (
+                    key === "widum" &&
+                    !useW
+                ) {
+                    continue;
+                }
+
+                pools.push(
+                    BANK[key].q.map(
+                        q => ({
+                            ...q,
+                            _topic:BANK[key].name,
+                            _src:!!BANK[key].src
+                        })
+                    )
+                );
+            }
+
+            const per =
+                Math.ceil(
+                    want / pools.length
+                );
+
+            let picked = [];
+
+            pools.forEach(
+                p => {
+                    picked =
+                        picked.concat(
+                            shuffle(
+                                p.slice()
+                            ).slice(0, per)
+                        );
+                }
+            );
+
+            picked =
+                shuffle(picked).slice(
+                    0,
+                    want
+                );
+
+            if (!picked.length) {
+                alert(
+                    "Нет доступных вопросов."
+                );
+
+                return;
+            }
+
+            startQuiz(
+                "🎲 Случайный набор",
+                picked,
+                true
+            );
+        }
+    );
+
+
+    /* ============================================================
+       QUIZ
+       ============================================================ */
+
+    function startQuiz(
+        title,
+        questions,
+        showTopic
+    ) {
+        session = {
+            title,
+            questions,
+            showTopic:!!showTopic,
+            idx:0,
+            ok:0,
+            bad:0,
+            log:[]
+        };
+
+        $("quizTitle").textContent =
+            title;
+
+        $("stack").replaceChildren();
+
+        updateBar();
+
+        show("quiz");
+
+        addQuestionCard();
+    }
+
+
+    function updateBar() {
+
+        const s =
+            session;
+
+        $("pillOk").textContent =
+            "✓ " + s.ok;
+
+        $("pillBad").textContent =
+            "✗ " + s.bad;
+
+        $("progFill").style.width =
+            (
+                s.idx /
+                s.questions.length *
+                100
+            ) + "%";
+    }
+
+
+    function addQuestionCard() {
+
+        const s =
+            session;
+
+        const q =
+            s.questions[s.idx];
+
+        const multi =
+            q.correct.length > 1;
+
+        const num =
+            s.idx;
+
+        const card =
+            el(
+                "div",
+                "card"
+            );
+
+        card.dataset.idx =
+            num;
+
+
+        /* ------------------------------------------------------------
+           TOP TAGS
+           ------------------------------------------------------------ */
+
+        const top =
+            el(
+                "div",
+                "q-top"
+            );
+
+        top.appendChild(
+            el(
+                "span",
+                "q-num",
+                `Вопрос ${num + 1} / ${s.questions.length}`
+            )
+        );
+
+        if (multi) {
+            top.appendChild(
+                el(
+                    "span",
+                    "tag multi",
+                    "Несколько ответов"
+                )
+            );
+        }
+
+        if (q._src) {
+            top.appendChild(
+                el(
+                    "span",
+                    "tag src",
+                    "раздел 13"
+                )
+            );
+        }
+
+        if (
+            s.showTopic &&
+            q._topic &&
+            !q._src
+        ) {
+            top.appendChild(
+                el(
+                    "span",
+                    "tag topic",
+                    q._topic
+                )
+            );
+        }
+
+        card.appendChild(top);
+
+
+        /* ------------------------------------------------------------
+           QUESTION
+           ------------------------------------------------------------ */
+
+        card.appendChild(
+            el(
+                "div",
+                "q-text",
+                q.q
+            )
+        );
+
+
+        /* ------------------------------------------------------------
+           OPTIONS
+           ------------------------------------------------------------ */
+
+        const opts =
+            el(
+                "div",
+                "opts"
+            );
+
+        const picked = [];
+        const btns = [];
+
+        q.a.forEach(
+            (text, i) => {
+
+                const b =
+                    el(
+                        "button",
+                        "opt"
+                    );
+
+                b.append(
+                    el(
+                        "span",
+                        "okey",
+                        KEYS[i]
+                    ),
+
+                    el(
+                        "span",
+                        "otext",
+                        text
+                    ),
+
+                    el(
+                        "span",
+                        "omark"
+                    )
+                );
+
+                b.addEventListener(
+                    "click",
+                    () => {
+
+                        if (
+                            card.dataset.done
+                        ) {
+                            return;
+                        }
+
+                        if (multi) {
+
+                            const p =
+                                picked.indexOf(i);
+
+                            if (p === -1) {
+                                picked.push(i);
+                                b.classList.add(
+                                    "sel"
+                                );
+                            } else {
+                                picked.splice(
+                                    p,
+                                    1
+                                );
+
+                                b.classList.remove(
+                                    "sel"
+                                );
+                            }
+
+                            checkBtn.disabled =
+                                picked.length === 0;
+
+                        } else {
+
+                            picked.length = 0;
+                            picked.push(i);
+
+                            reveal();
+                        }
+                    }
+                );
+
+                btns.push(b);
+                opts.appendChild(b);
+            }
+        );
+
+        card.appendChild(opts);
+
+
+        /* ------------------------------------------------------------
+           CHECK BUTTON
+           ------------------------------------------------------------ */
+
+        const checkWrap =
+            el(
+                "div",
+                "next-wrap"
+            );
+
+        const checkBtn =
+            el(
+                "button",
+                "primary next-btn",
+                "Проверить"
+            );
+
+        checkBtn.disabled =
+            true;
+
+        checkBtn.addEventListener(
+            "click",
+            reveal
+        );
+
+        if (multi) {
+            checkWrap.appendChild(
+                checkBtn
+            );
+
+            card.appendChild(
+                checkWrap
+            );
+        }
+
+
+        $("stack").appendChild(card);
+
+        card.scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+        });
+
+
+        /* ------------------------------------------------------------
+           REVEAL
+           ------------------------------------------------------------ */
+
+        function reveal() {
+
+            if (
+                card.dataset.done
+            ) {
+                return;
+            }
+
+            card.dataset.done =
+                "1";
+
+            card.classList.add(
+                "done"
+            );
+
+            checkWrap.remove();
+
+
+            const right =
+                q.correct
+                    .slice()
+                    .sort()
+                    .join(",");
+
+            const mine =
+                picked
+                    .slice()
+                    .sort()
+                    .join(",");
+
+            const isOk =
+                right === mine;
+
+
+            btns.forEach(
+                (b, i) => {
+
+                    b.disabled =
+                        true;
+
+                    b.classList.remove(
+                        "sel"
+                    );
+
+                    const mark =
+                        b.querySelector(
+                            ".omark"
+                        );
+
+                    if (
+                        q.correct.includes(i)
+                    ) {
+
+                        if (
+                            picked.includes(i)
+                        ) {
+
+                            b.classList.add(
+                                "right"
+                            );
+
+                            mark.textContent =
+                                "✓";
+
+                        } else {
+
+                            b.classList.add(
+                                "miss"
+                            );
+
+                            mark.textContent =
+                                "!";
+                        }
+
+                    } else if (
+                        picked.includes(i)
+                    ) {
+
+                        b.classList.add(
+                            "bad"
+                        );
+
+                        mark.textContent =
+                            "✗";
+                    }
+                }
+            );
+
+
+            if (isOk) {
+                s.ok++;
+            } else {
+                s.bad++;
+            }
+
+
+            s.log.push({
+                q:q.q,
+                ok:isOk
+            });
+
+
+            /* --------------------------------------------------------
+               EXPLANATION
+               -------------------------------------------------------- */
+
+            const exp =
+                el(
+                    "div",
+                    "exp " +
+                    (
+                        isOk
+                            ? "ok"
+                            : "no"
+                    )
+                );
+
+            exp.appendChild(
+                el(
+                    "div",
+                    "exp-head",
+                    isOk
+                        ? "✓ Верно!"
+                        : "✗ Неверно"
+                )
+            );
+
+
+            const body =
+                el(
+                    "div",
+                    "exp-body"
+                );
+
+
+            const rl =
+                el(
+                    "div",
+                    "exp-right"
+                );
+
+            const rb =
+                el("b");
+
+            rb.textContent =
+                q.correct.length > 1
+                    ? "Правильные ответы: "
+                    : "Правильный ответ: ";
+
+            rl.appendChild(rb);
+
+            rl.appendChild(
+                document.createTextNode(
+                    q.correct
+                        .map(
+                            i =>
+                                KEYS[i] +
+                                ") " +
+                                q.a[i]
+                        )
+                        .join("  ·  ")
+                )
+            );
+
+            body.appendChild(rl);
+
+
+            const why =
+                el(
+                    "div",
+                    "exp-why"
+                );
+
+            why.innerHTML =
+                q.exp;
+
+            body.appendChild(why);
+
+            exp.appendChild(body);
+
+            card.appendChild(exp);
+
+
+            /* --------------------------------------------------------
+               NEXT BUTTON
+               -------------------------------------------------------- */
+
+            const nw =
+                el(
+                    "div",
+                    "next-wrap"
+                );
+
+            const isLast =
+                s.idx ===
+                s.questions.length - 1;
+
+            const nb =
+                el(
+                    "button",
+                    "primary next-btn",
+                    isLast
+                        ? "Показать результаты →"
+                        : "Следующий вопрос →"
+                );
+
+            nb.addEventListener(
+                "click",
+                () => {
+
+                    nw.remove();
+
+                    s.idx++;
+
+                    updateBar();
+
+                    if (
+                        s.idx >=
+                        s.questions.length
+                    ) {
+                        showResults();
+                    } else {
+                        addQuestionCard();
+                    }
+                }
+            );
+
+            nw.appendChild(nb);
+
+            card.appendChild(nw);
+
+
+            updateBar();
+
+
+            setTimeout(
+                () => {
+                    nb.scrollIntoView({
+                        behavior:"smooth",
+                        block:"center"
+                    });
+                },
+                120
+            );
+        }
+    }
+
+
+    /* ============================================================
+       EXIT
+       ============================================================ */
+
+    $("quitBtn").addEventListener(
+        "click",
+        () => {
+
+            if (
+                session &&
+                session.idx > 0 &&
+                !confirm(
+                    "Выйти? Прогресс не сохранится."
+                )
+            ) {
+                return;
+            }
+
+            show("menu");
+        }
+    );
+
+
+    /* ============================================================
+       RESULTS
+       ============================================================ */
+
+    function showResults() {
+
+        const s =
+            session;
+
+        const total =
+            s.questions.length;
+
+        const pct =
+            Math.round(
+                s.ok /
+                total *
+                100
+            );
+
+        let emo;
+        let title;
+        let grade;
+
+        if (pct === 100) {
+
+            emo = "🏆";
+            title = "Идеально!";
+            grade =
+                "Все ответы верны. Так держать!";
+
+        } else if (pct >= 85) {
+
+            emo = "🎉";
+            title = "Отлично!";
+            grade =
+                "Тема освоена очень хорошо.";
+
+        } else if (pct >= 70) {
+
+            emo = "👍";
+            title = "Хорошо";
+            grade =
+                "Крепкий результат, но есть что подтянуть.";
+
+        } else if (pct >= 50) {
+
+            emo = "📚";
+            title = "Неплохо";
+            grade =
+                "Стоит повторить теорию и пройти ещё раз.";
+
+        } else {
+
+            emo = "💪";
+            title = "Есть над чем поработать";
+            grade =
+                "Загляни в theory.md и попробуй снова.";
+        }
+
+
+        $("resEmo").textContent =
+            emo;
+
+        $("resTitle").textContent =
+            title;
+
+        $("resGrade").textContent =
+            grade;
+
+        $("sOk").textContent =
+            s.ok;
+
+        $("sBad").textContent =
+            s.bad;
+
+        $("sPct").textContent =
+            pct + "%";
+
+        $("reviewBtn").classList.toggle(
+            "hidden",
+            s.bad === 0
+        );
+
+        show("results");
+    }
+
+
+    $("retryBtn").addEventListener(
+        "click",
+        () => {
+
+            startQuiz(
+                session.title,
+                shuffle(
+                    session.questions.slice()
+                ),
+                session.showTopic
+            );
+        }
+    );
+
+
+    $("reviewBtn").addEventListener(
+        "click",
+        () => {
+
+            screens.results.classList.add(
+                "hidden"
+            );
+
+            screens.quiz.classList.remove(
+                "hidden"
+            );
+
+            const first =
+                document.querySelector(
+                    ".card .exp.no"
+                );
+
+            if (first) {
+
+                first.scrollIntoView({
+                    behavior:"smooth",
+                    block:"center"
+                });
+
+            } else {
+
+                window.scrollTo({
+                    top:0,
+                    behavior:"smooth"
+                });
+            }
+        }
+    );
+
+
+    $("menuBtn").addEventListener(
+        "click",
+        () => show("menu")
+    );
+
+
+    /* ============================================================
+       INIT
+       ============================================================ */
+
+    buildMenu();
+
+</script>
+
+</body>
+</html>
